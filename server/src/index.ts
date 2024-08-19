@@ -3,7 +3,7 @@ import http from 'http';
 import { app } from '@/app';
 
 const BASE_URL = 'http://localhost';
-const PORT = 8000;
+const PORT = 4242;
 
 const server = http.createServer(app);
 
