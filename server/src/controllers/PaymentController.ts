@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import { IPaymentController } from '@/controllers/IPaymentController';
 import { IPaymentService } from '@/services/IPaymentService';
-import { Item } from '@/types/ItemType';
+import { Order } from '@/types/itemType';
 
 export class PaymentController implements IPaymentController {
   constructor(private paymentService: IPaymentService) {}
@@ -11,10 +11,10 @@ export class PaymentController implements IPaymentController {
    * POST /payment/create-intent
    */
   async createIntent(req: Request, res: Response) {
-    const { items } = req.body as { items: Item[] };
+    const { order } = req.body as { order: Order };
 
     try {
-      const paymentIntent = await this.paymentService.createIntent(items);
+      const paymentIntent = await this.paymentService.createIntent(order);
 
       res.send({
         clientSecret: paymentIntent.client_secret,

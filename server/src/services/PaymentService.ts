@@ -1,26 +1,32 @@
 import { Stripe } from 'stripe';
 
+import { IItemRepository } from '@/repositories/IItemRepository';
 import { IPaymentService } from '@/services/IPaymentService';
-import { Item } from '@/types/ItemType';
+import { Order } from '@/types/itemType';
 
 const TEST_SECRET_KEY =
   'sk_test_51PlkU0IJDLrZHQu8JttWPLwaXndQzMdeyFtjLBmeB323dGx1Hi5peFvPM7sSA1QbcBfR17W29BaC3q585qHXxJxQ007k9EvvFV';
 
 const stripe = new Stripe(TEST_SECRET_KEY);
 
+const CURRENCY = 'cad';
+
 export class PaymentService implements IPaymentService {
-  async createIntent(items: Item[]) {
-    return await stripe.paymentIntents.create({
-      amount: PaymentService.calculateOrderAmount(items),
-      currency: 'cad',
-    });
+  constructor(private itemRepository: IItemRepository) {}
+
+  async createIntent(order: Order) {
+    const totalAmountInCents = this.calculateOrderAmount(order);
+    return await stripe.paymentIntents.create({ amount: totalAmountInCents, currency: CURRENCY });
   }
 
-  static calculateOrderAmount = (items: Item[]) => {
-    let total = 0;
-    items.forEach((item) => {
-      total += item.amount;
+  private calculateOrderAmount(orderItems: Order): number {
+    let totalAmountInCents = 0;
+    orderItems.forEach((item) => {
+      const itemFromDb = this.itemRepository.getItemById(item.id);
+      if (itemFromDb) {
+        totalAmountInCents += itemFromDb.priceInCents * item.quantity;
+      }
     });
-    return total;
-  };
+    return totalAmountInCents;
+  }
 }

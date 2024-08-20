@@ -1,7 +1,7 @@
 import { Stripe } from 'stripe';
 
-import { Item } from '@/types/ItemType';
+import { Order } from '@/types/itemType';
 
 export interface IPaymentService {
-  createIntent(items: Item[]): Promise<Stripe.PaymentIntent>;
+  createIntent(order: Order): Promise<Stripe.PaymentIntent>;
 }
