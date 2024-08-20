@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 
-import { paymentRouter } from '@/routers/payment.router';
+import { paymentRouter } from '@/routers/PaymentRouter';
 
 export const app = express();
 
