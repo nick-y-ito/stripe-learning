@@ -5,6 +5,7 @@ import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
 import { createPaymentIntent } from 'api/checkoutApi';
 import { useEffect, useState } from 'react';
 
+import { CheckoutForm } from '@/components/CheckoutForm';
 import { Order } from '@/types/itemType';
 
 const TEST_SECRET_KEY =
@@ -40,7 +41,7 @@ export const Checkout = ({}: ICheckoutProps) => {
     <div>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
-          {/* <CheckoutForm /> */}
+          <CheckoutForm />
         </Elements>
       )}
     </div>
