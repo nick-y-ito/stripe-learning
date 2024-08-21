@@ -1,22 +1,27 @@
-import { Stripe } from 'stripe';
+import Stripe from 'stripe';
 
+import { ICustomerRepository } from '@/repositories/ICustomerRepository';
 import { IItemRepository } from '@/repositories/IItemRepository';
 import { IPaymentService } from '@/services/IPaymentService';
 import { Order } from '@/types/itemType';
 
-const TEST_SECRET_KEY =
-  'sk_test_51PlkU0IJDLrZHQu8JttWPLwaXndQzMdeyFtjLBmeB323dGx1Hi5peFvPM7sSA1QbcBfR17W29BaC3q585qHXxJxQ007k9EvvFV';
-
-const stripe = new Stripe(TEST_SECRET_KEY);
-
 const CURRENCY = 'cad';
 
 export class PaymentService implements IPaymentService {
-  constructor(private itemRepository: IItemRepository) {}
+  constructor(
+    private stripe: Stripe,
+    private customerRepository: ICustomerRepository,
+    private itemRepository: IItemRepository,
+  ) {}
 
   async createIntent(order: Order) {
+    const customer = await this.customerRepository.findOrCreateCustomer();
+
     const totalAmountInCents = this.calculateOrderAmount(order);
-    return await stripe.paymentIntents.create({
+    return await this.stripe.paymentIntents.create({
+      customer: customer.id,
+      setup_future_usage: 'off_session', // 'on_session' or 'off_session'
+
       amount: totalAmountInCents,
       currency: CURRENCY,
 
