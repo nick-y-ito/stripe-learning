@@ -71,7 +71,7 @@ export const CheckoutForm = () => {
   };
 
   const paymentElementOptions: StripePaymentElementOptions = {
-    layout: 'tabs',
+    layout: 'accordion', // 'tabs' | 'accordion' | 'auto'
   };
 
   return (

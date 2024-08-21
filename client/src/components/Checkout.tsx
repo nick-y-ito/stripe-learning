@@ -33,17 +33,22 @@ export const Checkout = ({}: ICheckoutProps) => {
   const options: StripeElementsOptions = {
     clientSecret,
     appearance: {
-      theme: 'stripe',
+      theme: 'flat', // 'stripe' | 'night' | 'flat'
+      variables: {
+        // colorPrimary: 'rgb(255, 157, 77)',
+        // colorBackground: 'rgb(247, 247, 247)',
+        // colorText: 'rgb(0, 0, 0)',
+      },
     },
   };
 
   return (
-    <div>
+    <>
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm />
         </Elements>
       )}
-    </div>
+    </>
   );
 };
