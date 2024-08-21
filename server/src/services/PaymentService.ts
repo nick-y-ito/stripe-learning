@@ -16,7 +16,18 @@ export class PaymentService implements IPaymentService {
 
   async createIntent(order: Order) {
     const totalAmountInCents = this.calculateOrderAmount(order);
-    return await stripe.paymentIntents.create({ amount: totalAmountInCents, currency: CURRENCY });
+    return await stripe.paymentIntents.create({
+      amount: totalAmountInCents,
+      currency: CURRENCY,
+
+      // // Manually configure the payment method types
+      // payment_method_types: ['card', 'google_pay'],
+
+      // // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+      // automatic_payment_methods: {
+      //   enabled: true,
+      // },
+    });
   }
 
   private calculateOrderAmount(orderItems: Order): number {
